@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="shortcut icon" href="favicon.svg" type="image/svg">
+		<!-- <link rel="stylesheet" href="" type="text/css"> -->
 
 		<title>Operational SIKAB</title>
 
