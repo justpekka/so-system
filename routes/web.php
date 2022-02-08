@@ -3,7 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Mockery\Undefined;
 
+use App\Http\Controllers\LoginController;
+
+use App\Http\Controllers\SqlQueries;
+use App\Http\Controllers\QueryBuilder;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,26 +32,48 @@ use Illuminate\Http\Response;
  * Route::any('/', function () {});
  * Route::redirect('/here', '/there', $status_code);
  * Route::permanentRedirect('/here', '/there'); //301 status code
+ * 
+ * Route::resource($uri, $resource_controller)
+ * Route::resources([
+ *  'photos' => PhotoController::class,
+ *  'posts' => PostController::class,
+ * ]);
  */
 
 Route::view('/welcome', 'archive.welcome');
 
-Route::match(['GET', 'POST'], '/user', function (Request $request) {
-    if($_SERVER["REQUEST_METHOD"] === 'POST') {
-        return $request;
-    };
+Route::match(['GET', 'POST'], '/login', [LoginController::class, "login"]);
+
+Route::prefix('/')
+//   ->middleware('')
+//   ->controller('')
+->group(function() {
+    Route::get('/', QueryBuilder::class);
+
     
-    return view('index', ['request' => $request]);
+    Route::get('/dashboard/{id?}', function(Request $request, $anything = null) {
+        $array = explode("/", $anything);
+        print_r($array);
+        echo "<h1> Welcome to " . $anything . " from SO System! </h1>";
+        return;
+    })->where('id', '.*');
+    Route::match(['GET', 'POST'], '/login', function (Request $request) {
+        if($_SERVER["REQUEST_METHOD"] === 'POST') {
+            return $request;
+        };
+        
+        return view('index', ['request' => $request]);
+    });
 });
 
 Route::prefix('admin/{token}')->middleware('ensureTokenIsValid')->group(function () { // to get to this group, access admin?token=my-secret-token
     Route::get('/', function (Request $request) {
         return view('index', ['request' => $request]);
-    });
+    })->withoutMiddleware('ensureTokenIsValid');
 
     Route::get('/user/profile', function (Request $request) {
         return $request;
-    });
+    })->middleware('role:editor');;
 });
 
 
@@ -129,4 +156,8 @@ Route::name('admin.')->group(function () {
     Route::get('/users', function () {
         // Route assigned name "admin.users"...
     })->name('users');
+});
+
+route::fallback(function() {
+    return "nothing.";
 });
