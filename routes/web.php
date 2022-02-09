@@ -44,26 +44,15 @@ Route::view('/welcome', 'archive.welcome');
 
 Route::match(['GET', 'POST'], '/login', [LoginController::class, "login"]);
 
-Route::prefix('/')
+Route::prefix('/sales')
 //   ->middleware('')
 //   ->controller('')
 ->group(function() {
-    Route::get('/', QueryBuilder::class);
+    $sales_builder = QueryBuilder::class;
 
-    
-    Route::get('/dashboard/{id?}', function(Request $request, $anything = null) {
-        $array = explode("/", $anything);
-        print_r($array);
-        echo "<h1> Welcome to " . $anything . " from SO System! </h1>";
-        return;
-    })->where('id', '.*');
-    Route::match(['GET', 'POST'], '/login', function (Request $request) {
-        if($_SERVER["REQUEST_METHOD"] === 'POST') {
-            return $request;
-        };
-        
-        return view('index', ['request' => $request]);
-    });
+    Route::redirect('/', 'dashboard');
+    Route::get('/dashboard', $sales_builder);
+    Route::get('/customers/{id?}', $sales_builder::Customers);
 });
 
 Route::prefix('admin/{token}')->middleware('ensureTokenIsValid')->group(function () { // to get to this group, access admin?token=my-secret-token
@@ -158,6 +147,6 @@ Route::name('admin.')->group(function () {
     })->name('users');
 });
 
-route::fallback(function() {
-    return "nothing.";
-});
+// route::fallback(function() {
+//     return "nothing.";
+// });

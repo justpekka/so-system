@@ -19,8 +19,14 @@ class LoginController extends Controller
         $this->middleware('subscribed')->except('store');
     }
 
-    public function login() {
+    public function login(Request $request) {
         return "welcome to Login controller.";
+            if($_SERVER["REQUEST_METHOD"] === 'POST') {
+                return $request;
+            };
+            
+            return view('index')
+                ->with('request', $request);
 
         /** @use this method or __construct() method for compiling the middleware
         $this->middleware(function ($request, $next) {
