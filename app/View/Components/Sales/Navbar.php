@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Sales;
 
 use Illuminate\View\Component;
 
-class part extends Component
+class Navbar extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class part extends Component
      */
     public function render()
     {
-        return view('components.part');
+        return view('components.sales.navbar');
     }
 }

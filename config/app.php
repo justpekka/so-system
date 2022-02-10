@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\SalesServiceProvider::class,
 
         /*
          * Application Service Providers...

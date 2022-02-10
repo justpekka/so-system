@@ -13,6 +13,7 @@ use App\Http\Controllers\Sales\OrdersController;
 use App\Http\Controllers\Sales\PaymentsController;
 use App\Http\Controllers\Sales\ProductLinesController;
 use App\Http\Controllers\Sales\ProductsController;
+use App\Http\Controllers\Sales\CashierViewController as Cashier;
 
 
 class QueryBuilder extends Controller
@@ -31,7 +32,8 @@ class QueryBuilder extends Controller
     const Orders = OrdersController::class;    
     const Payments = PaymentsController::class;    
     const ProductLines = ProductLinesController::class;    
-    const Products = ProductsController::class;    
+    const Products = ProductsController::class;
+    const Cashier = Cashier::class;
 
     public function __invoke(Request $request)
     {
