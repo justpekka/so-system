@@ -6,9 +6,9 @@
     <thead>
       <tr>
         <th scope="col"><b> # </b></td>
-          @foreach($value as $index => $child_value)
+        @foreach($value as $index => $child_value)
           <th scope="col"><b> {{ $index }} </b></td>
-          @endforeach
+        @endforeach
       </tr>
     </thead>
     @endif

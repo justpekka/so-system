@@ -52,6 +52,7 @@ Route::prefix('/sales')
 
     Route::redirect('/', 'dashboard');
     Route::get('/cashier', $sales_builder::Cashier);
+    Route::get('/cashier/{table?}/add', $sales_builder::Cashier);
 });
 
 Route::prefix('admin/{token}')->middleware('ensureTokenIsValid')->group(function () { // to get to this group, access admin?token=my-secret-token

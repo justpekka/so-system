@@ -11,10 +11,7 @@
 
     <body>
       <x-sales::navbar />
-      <main class="container mt-3">
-        {!! $test !!}
-        <h4>{{ $test }}</h4>
-        
+      <main class="container mt-3">        
         <div class="row gx-0">
           <div class="col col-6">
             <x-sales::table :data=$custList>

@@ -12,7 +12,7 @@ use App\Models\Sales\Payments;
 
 class CashierViewController extends Controller
 {
-    public function __invoke() 
+    public function __invoke()
     {
         return $this->index();
     }
@@ -20,6 +20,14 @@ class CashierViewController extends Controller
     public function index()
     {
         $customerList = Customer::take(5)->get();
-        return view('sales.cashier', ['custList' => json_decode($customerList), 'test' => "<H1> Hello World! </H1>"]);
+        echo "<pre>";
+        print_r(json_decode($customerList));
+        return;
+        // return view('sales.cashier', ['custList' => json_decode($customerList), 'test' => "<H1> Hello World! </H1>"]);
+    }
+
+    public function create()
+    {
+        
     }
 }
