@@ -52,8 +52,12 @@ Route::prefix('/sales')
 
     Route::redirect('/', 'dashboard');
     Route::get('/cashier', $sales_builder::Cashier);
-    Route::get('/cashier/{table?}/add', $sales_builder::Cashier);
+    Route::match(["GET", "POST"], '/cashier/add', [$sales_builder::Cashier, 'create']);
+    Route::match(["GET", "POST"], '/cashier/update/{id}', [$sales_builder::Cashier, 'update']);
+    Route::match(["GET", "POST"], '/cashier/delete/{id}', [$sales_builder::Cashier, 'delete']);
 });
+
+
 
 Route::prefix('admin/{token}')->middleware('ensureTokenIsValid')->group(function () { // to get to this group, access admin?token=my-secret-token
     Route::get('/', function (Request $request) {

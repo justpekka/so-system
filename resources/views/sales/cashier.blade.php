@@ -12,15 +12,15 @@
     <body>
       <x-sales::navbar />
       <main class="container mt-3">        
-        <div class="row gx-0">
-          <div class="col col-6">
-            <x-sales::table :data=$custList>
-              <h1>hello again!</h1>
-            </x-sales::table>
-          </div>
-        </div>
+        <x-sales::table :data=$custList>
+          <h1>hello again!</h1>
+        </x-sales::table>
       </main>
       
+      <!-- <div class="row gx-0">
+        <div class="col">
+        </div>
+      </div> -->
       
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     </body>

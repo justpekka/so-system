@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    // protected $table = 'customers';
+    protected $table = 'customers';
+
     protected $primaryKey = 'customerNumber';
     
-    // public $incrementing = true;
-    // public $timestamps = false;
+    const CREATED_AT = 'createdAt';
+    const UPDATED_AT = 'updatedAt';
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
