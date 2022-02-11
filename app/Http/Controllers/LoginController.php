@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Mockery\Undefined;
 
 class LoginController extends Controller
 {
-    
-    public function __invoke()
-    {
-        // default controller method.
-    }
+    const Req = Request::class;
 
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('log')->only('index');
         $this->middleware('subscribed')->except('store');
+    }
+    
+    public function __invoke()
+    {
+        return $this->login($this->Req);
     }
 
     public function login(Request $request) {
