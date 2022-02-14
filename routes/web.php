@@ -23,6 +23,3 @@ use App\Http\Controllers\QueryBuilder;
 Route::view('/welcome', 'archive.welcome');
 
 Route::match(['get', 'post'], '/login', LoginController::class);
-// Route::match(['get', 'post'], '/login', function() {
-//     return "Hello world!";
-// });
