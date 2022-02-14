@@ -5,10 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery\Undefined;
 
-use App\Http\Controllers\LoginController;
-
-use App\Http\Controllers\SqlQueries;
-use App\Http\Controllers\QueryBuilder;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +16,9 @@ use App\Http\Controllers\QueryBuilder;
 |
 */
 
+Route::redirect('/', '/welcome');
 Route::view('/welcome', 'archive.welcome');
 
-Route::match(['get', 'post'], '/login', LoginController::class);
+Route::match(['get', 'post'], '/login', function() {
+  return "hello World!";
+});
