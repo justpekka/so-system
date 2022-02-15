@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery\Undefined;
 
+use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,9 +18,9 @@ use Mockery\Undefined;
 |
 */
 
-Route::redirect('/', '/welcome');
+Route::get('/', UserController::class);
 Route::view('/welcome', 'archive.welcome');
 
 Route::match(['get', 'post'], '/login', function() {
   return "hello World!";
-});
+})->name('login');

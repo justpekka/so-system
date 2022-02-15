@@ -14,4 +14,9 @@ class PreventRequestsDuringMaintenance extends Middleware
     protected $except = [
         'welcome'
     ];
+
+    public function __invoke()
+    {
+        return redirect('/welcome');
+    }
 }
