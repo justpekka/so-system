@@ -15,9 +15,7 @@ class UserController extends Controller
     }
 
     public function index(Request $request)
-    {
-        session(['provider', 'SIKAB']);
-        
+    {        
         $findUser = json_decode(User::first());
         $password = $findUser->password;
         
@@ -25,5 +23,23 @@ class UserController extends Controller
         print_r($comparePassword);
         print_r(session()->all());
         return;
+    }
+
+    public function login(Request $request)
+    {
+        $sesi = session()->all();
+        $session = array (
+            $sesi,
+            $request->all(),
+        );
+
+        // if( $request->getMethod() == "POST" )
+        // {
+        //     echo "<pre>";
+        //     print_r($session);
+        //     return;
+        // }
+
+        return view('user.login', ['session' => $session]);
     }
 }

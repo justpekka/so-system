@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Hamcrest\Arrays\IsArray;
 use Illuminate\Http\Request;
 
-class EnsureTokenIsValid
+class UserHandler
 {
     /**
      * Handle an incoming request.
@@ -14,7 +15,7 @@ class EnsureTokenIsValid
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
         /**
          * How to use middleware after request.
@@ -23,9 +24,14 @@ class EnsureTokenIsValid
             // return $response;
         */
         
-        if ($request->input('token') !== 'my-secret-token') {
-            return redirect('home');
-        }
+        // if ( $request ) {
+        //     return back();
+        // }
+
+        // if (! $request->session()->get('user') ) {
+            // return "You are not logged in.";
+            // return redirect('/login', 401);
+        // }
 
         return $next($request);
     }

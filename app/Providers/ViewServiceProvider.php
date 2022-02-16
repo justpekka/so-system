@@ -5,8 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Blade;
-use App\View\Components\Sales\Navbar;
-use App\View\Components\Sales\Parts;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -27,6 +25,6 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Blade::componentNamespace('App\\View\\Components\\Sales', 'sales');
+        Blade::componentNamespace('App\\View\\Components\\User', 'user');
     }
 }

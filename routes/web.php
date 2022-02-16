@@ -18,9 +18,14 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', UserController::class);
-Route::view('/welcome', 'archive.welcome');
+Route::view('/welcome', 'archive.welcome')->name('welcome');
 
-Route::match(['get', 'post'], '/login', function() {
-  return "hello World!";
-})->name('login');
+Route::match(['get', 'post'], '/login', [UserController::class, 'login'])->name('user_login');
+
+Route::prefix('/')
+->middleware(['user.handle'])
+->group(function() {
+  Route::redirect('/', '/welcome');
+});
+
+// Route::get('/user', UserController::class);
