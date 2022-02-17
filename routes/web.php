@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Mockery\Undefined;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ApiControllerV1;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,32 @@ Route::match(['get', 'post'], '/login', [UserController::class, 'login'])->name(
 Route::prefix('/')
 ->middleware(['user.handle'])
 ->group(function() {
-  Route::redirect('/', '/welcome');
+  Route::get('/dashboard', UserController::class);
+
+  /** @var User RouteController */
+  Route::prefix('/user')
+    ->controller(UserController::class)
+    ->group(function() {
+      Route::get('/list', 'list');
+    });
+  /** End of @var User RouteController */
 });
 
 // Route::get('/user', UserController::class);
+
+Route::prefix('/v1')
+// ->middleware(['user.handle'])
+->controller(ApiControllerV1::class)
+->group(function() {
+  Route::get('/', 'index');
+
+  /** @var V1Auth RouteController */
+  Route::prefix('/auth')
+    ->group(function() {
+      Route::post('/', 'auth');
+      Route::post('/register', 'registerUser');
+      Route::post('/login', 'login');
+      Route::post('/logout', 'logout');
+    });
+  /** End of @var V1Auth RouteController */
+});

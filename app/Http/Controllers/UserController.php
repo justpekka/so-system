@@ -9,6 +9,13 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+    protected $models;
+
+    public function __construct()
+    {
+        $this->models['user'] = User::class;
+    }
+
     public function __invoke(Request $request)
     {
         return $this->index($request);
@@ -41,5 +48,14 @@ class UserController extends Controller
         // }
 
         return view('user.login', ['session' => $session]);
+    }
+
+    public function list(Request $request)
+    {
+        $user = json_decode($this->models['user']::get());
+
+        echo "<pre>";
+        print_r($user);
+        return;
     }
 }
