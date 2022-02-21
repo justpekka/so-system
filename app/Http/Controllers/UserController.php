@@ -40,13 +40,6 @@ class UserController extends Controller
             $request->all(),
         );
 
-        // if( $request->getMethod() == "POST" )
-        // {
-        //     echo "<pre>";
-        //     print_r($session);
-        //     return;
-        // }
-
         return view('user.login', ['session' => $session]);
     }
 

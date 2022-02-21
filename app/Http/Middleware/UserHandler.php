@@ -15,27 +15,23 @@ class UserHandler
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, ...$roles)
-    {
-        /**
-         * How to use middleware after request.
-            // $response = $next($request);
-            // // Perform action
-            // return $response;
-        */
-        
-        // if ( $request ) {
-        //     return back();
-        // }
 
-        // if (! $request->session()->get('user') ) {
-            // return "You are not logged in.";
-            // return redirect('/login', 401);
-        // }
+    protected $wrongMessage;
+
+    public function __construct()
+    {
+        $this->wrongMessage = ["wrong route method!"];
+        return; 
+    }
+
+    public function handle(Request $request, Closure $next)
+    {
+        $response = ["error", "wrong method!"];
+        if( $request->getMethod() == "GET" ) return redirect()->route('ApiV1');
 
         return $next($request);
     }
-    
+
     public function terminate($request, $response)
     {
         // ...

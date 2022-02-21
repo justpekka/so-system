@@ -8,6 +8,9 @@ use Mockery\Undefined;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ApiControllerV1;
 
+use App\Http\Controllers\ItemsController;
+use App\Http\Controllers\ItemListsController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,31 +27,38 @@ Route::view('/welcome', 'archive.welcome')->name('welcome');
 Route::match(['get', 'post'], '/login', [UserController::class, 'login'])->name('user_login');
 
 Route::prefix('/')
-->middleware(['user.handle'])
+// ->middleware(['user.handle'])
 ->group(function() {
-  Route::get('/dashboard', UserController::class);
+  /** @var Items RouteController */
+  Route::prefix('/item')
+    ->controller(ItemListsController::class)
+    ->group(function() {
+      Route::get('/', 'index');
+    });
+
+
 
   /** @var User RouteController */
   Route::prefix('/user')
     ->controller(UserController::class)
     ->group(function() {
+      Route::get('/dashboard', 'index');
       Route::get('/list', 'list');
     });
-  /** End of @var User RouteController */
 });
 
 // Route::get('/user', UserController::class);
 
-Route::prefix('/v1')
-// ->middleware(['user.handle'])
-->controller(ApiControllerV1::class)
-->group(function() {
-  Route::get('/', 'index');
+
+
+
+
+Route::group(['prefix' => "/v1", 'controller' => ApiControllerV1::class], function() {
+  Route::get('/', 'index')->name('ApiV1');
 
   /** @var V1Auth RouteController */
-  Route::prefix('/auth')
-    ->group(function() {
-      Route::post('/', 'auth');
+  Route::group(['prefix' => '/auth'], function() {
+      Route::any('/', 'auth')->middleware('user.handle');
       Route::post('/register', 'registerUser');
       Route::post('/login', 'login');
       Route::post('/logout', 'logout');
