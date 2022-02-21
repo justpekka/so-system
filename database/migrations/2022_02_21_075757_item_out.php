@@ -13,14 +13,17 @@ class ItemOut extends Migration
      */
     public function up()
     {
+        if(! Schema::hasTable("item_outs")) 
+        {
         Schema::create('item_outs', function (Blueprint $table) {
-            $table->id('item_in_id');
+            $table->id('item_out_id');
             $table->bigInteger('item_id', false, true);
-            $table->integer('item_in_quantity');
-            $table->timestamp('item_in_date');
-            $table->softDeletes();
+            $table->integer('item_out_quantity', false, true);
+            $table->timestamp('item_out_date');
             $table->timestamps();
+            $table->softDeletes();
         });
+        }
     }
 
     /**
@@ -30,6 +33,6 @@ class ItemOut extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_outs');
+        // Schema::dropIfExists('item_outs');
     }
 }

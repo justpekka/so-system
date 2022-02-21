@@ -1,26 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models\Items;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Items\ItemLists;
-use App\Models\Items\ItemIns;
-use App\Models\Items\ItemOuts;
-
-class ItemListsController extends Controller
+class ItemLists extends Model
 {
-    public function __construct()
-    {
+    use HasFactory;
 
-    }
+    protected $id = 'item_id';
 
-    public function __invoke()
-    {
-        return $this->index();
-    }
-
-    public function index()
+    public function getItems()
     {
         $result = json_decode(ItemLists::get());
 
@@ -31,19 +22,18 @@ class ItemListsController extends Controller
                     ItemLists::where('item_lists.item_id', $value->item_id)
                     ->join('item_ins', 'item_lists.item_id', '=', 'item_ins.item_id')
                     ->select('item_in_quantity', 'item_in_date')
-                    ->sum('item_in_quantity')
+                    ->get()
+                    // ->sum('item_in_quantity')
                 ),
                 "item_out" => json_decode(
                     ItemLists::where('item_lists.item_id', $value->item_id)
                     ->join('item_outs', 'item_lists.item_id', '=', 'item_outs.item_id')
                     ->select('item_out_quantity', 'item_out_date')
-                    ->sum('item_out_quantity')
-            )];
-        }
-
-        echo "<pre>";
-        print_r($result);
-
-        return;
+                    ->get()
+                    // ->sum('item_out_quantity')
+                )
+            ];
+        };
     }
+    
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ItemLog extends Migration
+class ItemIn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,17 @@ class ItemLog extends Migration
      */
     public function up()
     {
+        if(! Schema::hasTable("item_ins")) 
+        {
         Schema::create('item_ins', function (Blueprint $table) {
             $table->id('item_in_id');
             $table->bigInteger('item_id', false, true);
-            $table->integer('item_in_quantity');
+            $table->integer('item_in_quantity', false, true);
             $table->timestamp('item_in_date');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
+        }
     }
 
     /**
@@ -30,6 +33,6 @@ class ItemLog extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_ins');
+        // Schema::dropIfExists('item_ins');
     }
 }

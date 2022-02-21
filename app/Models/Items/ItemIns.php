@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Items;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use ItemLists;
 
-class Items extends Model
+class ItemIns extends Model
 {
     use HasFactory;
 
-    protected $table = "item_logs";
+    protected $table = "item_ins";
 
     // public function itemWithStock()
     // {
