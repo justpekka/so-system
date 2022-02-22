@@ -32,17 +32,6 @@ class UserController extends Controller
         return;
     }
 
-    public function login(Request $request)
-    {
-        $sesi = session()->all();
-        $session = array (
-            $sesi,
-            $request->all(),
-        );
-
-        return view('user.login', ['session' => $session]);
-    }
-
     public function list(Request $request)
     {
         $user = json_decode($this->models['user']::get());

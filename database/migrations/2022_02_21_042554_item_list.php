@@ -16,7 +16,7 @@ class ItemList extends Migration
         if(! Schema::hasTable("item_lists")) 
         {
         Schema::create('item_lists', function (Blueprint $table) {
-            $table->id('item_id');
+            $table->id('id');
             $table->string('item_code', 100)->unique();
             $table->string('item_name', 255);
             $table->text('item_description')->nullable(true);

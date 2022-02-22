@@ -16,7 +16,7 @@ class ItemOut extends Migration
         if(! Schema::hasTable("item_outs")) 
         {
         Schema::create('item_outs', function (Blueprint $table) {
-            $table->id('item_out_id');
+            $table->id('id');
             $table->bigInteger('item_id', false, true);
             $table->integer('item_out_quantity', false, true);
             $table->timestamp('item_out_date');

@@ -11,6 +11,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemLogsController;
 use App\Http\Controllers\ItemListsController;
 
+use App\Http\Controllers\AboardController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,19 +27,20 @@ use App\Http\Controllers\ItemListsController;
 Route::view('/welcome', 'archive.welcome')->name('welcome');
 
 
-Route::match(['get', 'post'], '/login', [UserController::class, 'login'])->name('user_login');
+Route::match(['get', 'post'], '/login', [ApiControllerV1::class, 'login'])->name('user_login');
+Route::get('/logout', [ApiControllerV1::class, 'logout'])->name('user_logout');
 
-Route::prefix('/')
-// ->middleware(['user.handle'])
-->group(function() {
-
-  /** @var Items RouteController */
-  Route::group(["prefix" => '/item'], function() {
-      Route::get('/', [ItemListsController::class, 'index']);
-      Route::get('/{code}', [ItemLogsController::class, 'index']);
-    });
-    
+Route::group(['prefix' => '/board', 'controller' => AboardController::class], function() {
+  Route::get('/', 'index');
 });
+
+/** @var Items RouteController */
+Route::group(["prefix" => '/item'], function() {
+    Route::get('/', [ItemListsController::class, 'index']);
+    Route::get('/{code}', [ItemLogsController::class, 'index']);
+  });
+
+
 
 // Route::get('/user', UserController::class);
 
@@ -50,19 +53,10 @@ Route::group(['prefix' => "/v1", 'controller' => ApiControllerV1::class], functi
 
   /** @var V1Auth RouteController */
   Route::group(['prefix' => '/auth'], function() {
-    Route::any('/', 'auth')->middleware('user.handle');
     Route::post('/register', 'registerUser');
     Route::post('/login', 'login');
     Route::post('/logout', 'logout');
   });
   /** End of @var V1Auth RouteController */
 
-  /** @var V1Items RouteController */
-  // Route::group(['prefix' => '/items'], function() {
-    // Route::any('/', 'auth')->middleware('user.handle');
-    // Route::post('/register', 'registerUser');
-    // Route::post('/login', 'login');
-    // Route::post('/logout', 'logout');
-  // });
-  /** End of @var V1Items RouteController */
 });

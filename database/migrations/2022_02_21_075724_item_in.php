@@ -16,7 +16,7 @@ class ItemIn extends Migration
         if(! Schema::hasTable("item_ins")) 
         {
         Schema::create('item_ins', function (Blueprint $table) {
-            $table->id('item_in_id');
+            $table->id('id');
             $table->bigInteger('item_id', false, true);
             $table->integer('item_in_quantity', false, true);
             $table->timestamp('item_in_date');

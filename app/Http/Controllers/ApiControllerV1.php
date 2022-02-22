@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Exists;
 
+use App\Models\User;
+
 class ApiControllerV1 extends Controller
 {
     /**
@@ -28,37 +30,35 @@ class ApiControllerV1 extends Controller
     }
     
     /** @var V1Auth RouteController */
-    public function auth(Request $request)
-    {
-        $inputted_data = $request->all();
-        if( !empty($inputted_data["name"]) )
-        {
-            return $inputted_data["name"];
-        };
-
-        return $inputted_data;
-    }
 
     public function registerUser(Request $request)
     {
-        $inputted_data = $request->all();
-        if( !empty($inputted_data["name"]) )
-        {
-            return $inputted_data["name"];
-        };
+        $validated = $request->validateWithBag('POST', [
+            'username' => ['bail', 'required', 'unique:users', 'min:5', 'max:12'],
+            'password' => ['required', 'min:5'],
+            'first_name' => ['required', 'min:2', 'max:20'],
+            'last_name' => ['min:2', 'max:20'],
+        ]);
 
-        return $inputted_data;
+        return $validated;
     }
-    
+
     public function login(Request $request)
     {
-        $inputted_data = $request->all();
-        if(! empty($inputted_data["name"]) )
-        {
-            return $inputted_data["name"];
+        if( $request->getMethod() == "POST" ) {
+            $result = json_decode( User::where('username', $request->get('username'))->first() );
+
+            if(! $result ) return response(json_encode(['message' => 'Invalid username.']), 402)->header('content-type', 'application/json');
+            return;
         };
 
-        return $inputted_data;
+        $sesi = session()->all();
+        $session = array (
+            $sesi,
+            $request->all(),
+        );
+
+        return view('user.login', ['session' => $session]);
     }
     
     public function logout(Request $request)
