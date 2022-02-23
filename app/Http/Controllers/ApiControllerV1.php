@@ -76,6 +76,7 @@ class ApiControllerV1 extends Controller
     public function logout(Request $request)
     {
         $session = session()->forget('login');
+        
         return redirect(route('user_login'));
     }
     /** End of @var V1Auth RouteController */
