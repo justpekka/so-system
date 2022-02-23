@@ -18,7 +18,7 @@ class UserHandler
 
     public function handle(Request $request, Closure $next)
     {
-        $login_status = $request->session()->get('login');
+        $login_status = $request->session()->get('access_token');
 
         if($request->routeIs('user_login')) {
             if( $login_status ) return redirect(route('detail', ["code" => "copper_sock"]));

@@ -60,13 +60,14 @@ class ApiControllerV1 extends Controller
             if( !$password_match ) return response(['message' => 'Wrong password!'], 401)->header('content-type', 'application/json');
             
             // token control
+            $rand_token = password_hash('sdwqer29aw', PASSWORD_DEFAULT);
             LoginToken::insert([
                 'user_id' => $result->id,
-                'token' => password_hash($result->remember_token, PASSWORD_DEFAULT),
+                'token' => $rand_token,
             ]);
             
-            session(['login' => $result]);
-            return response(null, 200);
+            session(['access_token' => $rand_token]);
+            return response(['token' => $rand_token, 'role'], 200, ['content-type' => 'application/json']);
         };
 
         // Handling the Default (GET) Method
@@ -75,8 +76,14 @@ class ApiControllerV1 extends Controller
     
     public function logout(Request $request)
     {
-        $session = session()->forget('login');
-        return redirect(route('user_login'));
+        $token = $request->get('token');
+        $status = LoginToken::where('token', $token)->delete();
+        
+        if( $status ) {
+            session()->forget('access_token');
+            return response(["message" => "Logout success."], 200);
+        };
+        return response(["message" => "unauthorized user."], 401);
     }
     /** End of @var V1Auth RouteController */
 }

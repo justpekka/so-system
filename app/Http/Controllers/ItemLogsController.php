@@ -35,8 +35,6 @@ class ItemLogsController extends Controller
             ->get()
         );
 
-        echo "<pre>";
-        print_r($result);
-        return; 
+        return response(["session" => session()->all(), "result" => $result], 200, ['content-type' => 'application/json']);
     }
 }
