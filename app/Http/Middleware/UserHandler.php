@@ -16,19 +16,19 @@ class UserHandler
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
 
-    protected $wrongMessage;
-
-    public function __construct()
-    {
-        $this->wrongMessage = ["wrong route method!"];
-        return; 
-    }
-
     public function handle(Request $request, Closure $next)
     {
-        $response = ["error", "wrong method!"];
-        if( $request->getMethod() == "GET" ) return redirect()->route('ApiV1');
+        $login_status = $request->session()->get('login');
 
+        if($request->routeIs('user_login')) {
+            if( $login_status ) return redirect(route('detail', ["code" => "copper_sock"]));
+            // if( $login_status ) return $request;
+            
+            return $next($request);
+        };
+
+        if( !$login_status ) return redirect(route('user_login'))->with(['errors' => 'You are a guest.']);
+        
         return $next($request);
     }
 

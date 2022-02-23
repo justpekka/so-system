@@ -18,20 +18,14 @@ class ItemLists extends Model
         foreach($result as $key => $value)
         {
             $result[$key]->item_log = [
-                "item_in" => json_decode(
-                    ItemLists::where('item_lists.item_id', $value->item_id)
-                    ->join('item_ins', 'item_lists.item_id', '=', 'item_ins.item_id')
+                "item_in" => ItemLists::find($value->id)
+                    ->join('item_ins', 'item_lists.id', '=', 'item_id')
                     ->select('item_in_quantity', 'item_in_date')
-                    ->get()
-                    // ->sum('item_in_quantity')
-                ),
-                "item_out" => json_decode(
-                    ItemLists::where('item_lists.item_id', $value->item_id)
-                    ->join('item_outs', 'item_lists.item_id', '=', 'item_outs.item_id')
+                    ->sum('item_in_quantity'),
+                "item_out" => ItemLists::find($value->id)
+                    ->join('item_outs', 'item_lists.id', '=', 'item_id')
                     ->select('item_out_quantity', 'item_out_date')
-                    ->get()
-                    // ->sum('item_out_quantity')
-                )
+                    ->sum('item_out_quantity')
             ];
         };
     }

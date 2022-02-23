@@ -17,7 +17,7 @@ class ItemIn extends Migration
         {
         Schema::create('item_ins', function (Blueprint $table) {
             $table->id('id');
-            $table->bigInteger('item_id', false, true);
+            $table->foreignId('item_id')->constrained('items', 'id');
             $table->integer('item_in_quantity', false, true);
             $table->timestamp('item_in_date');
             $table->timestamps();

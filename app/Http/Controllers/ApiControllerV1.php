@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Exists;
 
 use App\Models\User;
+use App\Models\LoginToken;
 
 class ApiControllerV1 extends Controller
 {
@@ -30,7 +31,6 @@ class ApiControllerV1 extends Controller
     }
     
     /** @var V1Auth RouteController */
-
     public function registerUser(Request $request)
     {
         $validated = $request->validateWithBag('POST', [
@@ -45,31 +45,38 @@ class ApiControllerV1 extends Controller
 
     public function login(Request $request)
     {
+        // Handling the POST Method.
         if( $request->getMethod() == "POST" ) {
-            $result = json_decode( User::where('username', $request->get('username'))->first() );
+            $username = $request->get('username');
+            $password = $request->get('password');
+            $result = json_decode(
+                User::where('username', '=', $username)
+                    ->orWhere('email', '=', $username)
+                ->first() );
 
-            if(! $result ) return response(json_encode(['message' => 'Invalid username.']), 402)->header('content-type', 'application/json');
-            return;
+            if( !$result ) return response(['message' => 'There is no username or email in the list.'], 401)->header('content-type', 'application/json');
+            
+            $password_match = password_verify( $password, $result->password );
+            if( !$password_match ) return response(['message' => 'Wrong password!'], 401)->header('content-type', 'application/json');
+            
+            // token control
+            LoginToken::insert([
+                'user_id' => $result->id,
+                'token' => password_hash($result->remember_token, PASSWORD_DEFAULT),
+            ]);
+            
+            session(['login' => $result]);
+            return response(null, 200);
         };
 
-        $sesi = session()->all();
-        $session = array (
-            $sesi,
-            $request->all(),
-        );
-
-        return view('user.login', ['session' => $session]);
+        // Handling the Default (GET) Method
+        return view('user.login', ['session' => session()->all(), 'request_url' => $request->path()]);
     }
     
     public function logout(Request $request)
     {
-        $inputted_data = $request->all();
-        if(! empty($inputted_data["name"]) )
-        {
-            return $inputted_data["name"];
-        };
-
-        return $inputted_data;
+        $session = session()->forget('login');
+        return redirect(route('user_login'));
     }
     /** End of @var V1Auth RouteController */
 }

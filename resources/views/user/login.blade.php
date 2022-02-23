@@ -9,10 +9,21 @@
  
 @section('content')
     <x-user::login />
+    
+    {{ $request_url }}
+
+    @if( session('errors') )
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Holy guacamole!</strong> {{ session('errors') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
 
     <pre>
     <?php
         print_r($session);
     ?>
+
+    
     </pre>
 @endsection

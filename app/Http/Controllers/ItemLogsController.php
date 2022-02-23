@@ -22,20 +22,18 @@ class ItemLogsController extends Controller
     public function index(Request $request, $code = null)
     {
         $result = json_decode(ItemLists::where("item_code", $code)->first());
-        $result->item_log = [
-            "item_in" => json_decode(
-                ItemLists::where('item_lists.item_id', $result->item_id)
-                ->join('item_ins', 'item_lists.item_id', '=', 'item_ins.item_id')
-                ->select('item_in_quantity', 'item_in_date')
-                ->get()
-            ),
-            "item_out" => json_decode(
-                ItemLists::where('item_lists.item_id', $result->item_id)
-                ->join('item_outs', 'item_lists.item_id', '=', 'item_outs.item_id')
-                ->select('item_out_quantity', 'item_out_date')
-                ->get()
-            )
-        ];
+        $result->item_in = json_decode(
+            ItemLists::where('item_lists.id', $result->id)
+            ->join('item_ins', 'item_lists.id', '=', 'item_id')
+            ->select('item_in_quantity', 'item_in_date')
+            ->get()
+        );
+        $result->item_out = json_decode(
+            ItemLists::where('item_lists.id', $result->id)
+            ->join('item_outs', 'item_lists.id', '=', 'item_id')
+            ->select('item_out_quantity', 'item_out_date')
+            ->get()
+        );
 
         echo "<pre>";
         print_r($result);
