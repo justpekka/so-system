@@ -46,7 +46,7 @@ class ApiControllerV1 extends Controller
     public function login(Request $request)
     {
         // Handling the Default (GET) Method
-        if( $request->getMethod() == "GET" ) return view('user.login', ['session' => session()->all(), 'request_url' => $request->path()]);
+        if( $request->getMethod() == "GET" ) return view('user.login');
 
         // Handling the Default (POST) Method
         $username = $request->get('username');
@@ -54,35 +54,44 @@ class ApiControllerV1 extends Controller
         $result = json_decode(
             User::where('username', '=', $username)
                 ->orWhere('email', '=', $username)
-                ->first() );
+                ->first() 
+        );
 
-        if( !$result ) return response(['message' => 'There is no username or email in the list.'], 401)->header('content-type', 'application/json');
+        if( !$result ) {
+            return response(['message' => 'There is no username or email in the list.'], 401)->header('content-type', 'application/json');
+        }
         
         $password_match = password_verify( $password, $result->password );
-        if( !$password_match ) return response(['message' => 'Wrong password!'], 401)->header('content-type', 'application/json');
+        if( !$password_match ) {
+            return response(['message' => 'Wrong password!'], 401)->header('content-type', 'application/json');
+        }
         
-        // token control
+        // Checking if token is already registered
+        if( session()->get('access_token') ) return redirect()->route('dashboard.index');
+
         $rand_token = password_hash($result->remember_token, PASSWORD_DEFAULT);
         LoginToken::insert([
             'user_id' => $result->id,
             'token' => $rand_token,
         ]);
-        
+
         session(['access_token' => $rand_token]);
         return response(['token' => $rand_token, 'role'], 200, ['content-type' => 'application/json']);
     }
     
     public function logout(Request $request)
     {
-        $token = $request->get('token');
-        $status = LoginToken::where('token', $token)->delete();
-        
+        $token = $request->get('access_token');
+        if ( !$token ) $token = session()->get('access_token');        
+        $status = LoginToken::where('token', $token)->update(['last_used_at' => date('Y-m-j H:i:s')]);
+
         if( $status ) {
             session()->forget('access_token');
             return response(["message" => "Logout success."], 200);
         };
         
         return response(["message" => "unauthorized user."], 401);
+        // return response(["message" => [$token], "result" => json_decode($status)]);
     }
     /** End of @var V1Auth RouteController */
 }

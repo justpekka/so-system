@@ -26,17 +26,15 @@ use App\Http\Controllers\AboardController;
 
 Route::view('/welcome', 'archive.welcome')->name('welcome');
 
-
 Route::get('/login', [ApiControllerV1::class, 'login'])->name('user_login')->middleware('user.handle');
 Route::get('/logout', [ApiControllerV1::class, 'logout'])->name('user_logout');
 
 
-
 /** @var Items RouteController */
-Route::group(["prefix" => '/item', 'middleware' => ['user.handle'], "name" => 'dashboard.'], function() {
-    Route::get('/', [ItemListsController::class, 'index'])->name('index');
-    Route::get('/{code}', [ItemLogsController::class, 'index'])->name('detail');
-  });
+Route::prefix('/item')->name('dashboard.')->middleware(['user.handle'])->group(function() {
+  Route::get('/', [ItemListsController::class, 'index'])->name('index');
+  Route::get('/{code}', [ItemLogsController::class, 'index'])->name('detail');
+});
 
 Route::group(['prefix' => '/board', 'controller' => AboardController::class], function() {
   Route::get('/', 'index');

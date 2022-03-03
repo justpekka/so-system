@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\LoginToken;
 use Closure;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Http\Request;
@@ -19,13 +20,19 @@ class UserHandler
     public function handle(Request $request, Closure $next)
     {
         $login_status = $request->session()->get('access_token');
+        $result = LoginToken::where('token', session()->get('access_token'))
+                    ->whereRaw('last_used_at is null')
+                    ->first();
 
         if($request->routeIs('user_login')) {
-            if( $login_status ) return redirect(route('detail', ["code" => "copper_sock"]));            
+            if( $result ) return redirect(route('dashboard.index'));
             return $next($request);
         };
 
-        if( !$login_status ) return redirect(route('user_login'))->with(['errors' => 'You are a guest.']);
+        if( !$result ) {
+            $request->session()->forget('access_token');
+            return redirect(route('user_login'))->with(['errors' => 'You are a guest.']);
+        };
         
         return $next($request);
     }
