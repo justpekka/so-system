@@ -8,7 +8,6 @@ use Mockery\Undefined;
 use App\Http\Controllers\ApiControllerV1;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ItemLogsController;
 use App\Http\Controllers\ItemListsController;
 
 use App\Http\Controllers\AboardController;
@@ -31,9 +30,13 @@ Route::get('/logout', [ApiControllerV1::class, 'logout'])->name('user_logout');
 
 
 /** @var Items RouteController */
-Route::prefix('/item')->name('dashboard.')->middleware(['user.handle'])->group(function() {
-  Route::get('/', [ItemListsController::class, 'index'])->name('index');
-  Route::get('/{code}', [ItemLogsController::class, 'index'])->name('detail');
+Route::controller(ItemListsController::class)
+  ->prefix('/item')
+  ->middleware(['user.handle'])
+  ->name('dashboard.')
+  ->group(function() {
+  Route::get('/', 'index')->name('index');
+  Route::get('/{code}', 'detail')->name('detail');
 });
 
 Route::group(['prefix' => '/board', 'controller' => AboardController::class], function() {
@@ -42,7 +45,7 @@ Route::group(['prefix' => '/board', 'controller' => AboardController::class], fu
 
 // Route::get('/user', UserController::class);
 
-Route::group(['prefix' => "/v1", 'controller' => ApiControllerV1::class], function() {
+Route::prefix("/v1")->controller(ApiControllerV1::class)->group(function() {
   Route::get('/', 'index')->name('ApiV1');
 
   /** @var V1Auth RouteController */
@@ -52,5 +55,4 @@ Route::group(['prefix' => "/v1", 'controller' => ApiControllerV1::class], functi
     Route::post('/logout', 'logout');
   });
   /** End of @var V1Auth RouteController */
-
 });
