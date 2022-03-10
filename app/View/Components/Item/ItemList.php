@@ -11,9 +11,14 @@ class ItemList extends Component
      *
      * @return void
      */
-    public function __construct()
+
+    public $titles;
+    public $items;
+    
+    public function __construct($titles, $items)
     {
-        //
+        $this->titles = $titles;
+        $this->items = $items;
     }
 
     /**

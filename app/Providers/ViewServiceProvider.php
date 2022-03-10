@@ -26,5 +26,6 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::componentNamespace('App\\View\\Components\\User', 'user');
+        Blade::componentNamespace('App\\View\\Components\\Item', 'item');
     }
 }

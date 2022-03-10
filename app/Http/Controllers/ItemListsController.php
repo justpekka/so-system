@@ -23,7 +23,6 @@ class ItemListsController extends Controller
     {
         $result = json_decode(ItemLists::get());
 
-
         foreach($result as $key => $value)
         {
             $item_in = ItemLists::where('item_lists.id', $value->id)
@@ -35,30 +34,38 @@ class ItemListsController extends Controller
                 ->select('item_out_quantity', 'item_out_date')
                 ->sum('item_outs.item_out_quantity');
 
+            /** @var RemovingUniqID */
+            unset($value->id);
+
             /** @var Int $item_count must return a positive number */
             $item_count = $item_in - $item_out;
             // if( $item_count < 0 ) $item_count = "error";
             $result[$key]->item_status = ["inStock" => $item_count, "itemIn" => $item_in, "itemOut" => $item_out];
         }
 
-        echo "<pre>";
-        print_r($result);
-
-        return;
+        return view('items', ["session" => session()->all(), "result" => $result], ['attributes' => 'items list']);
     }
 
     public function detail(Request $request, $code = null)
     {
-        $result = ItemLists::where("item_code", $code)->first();
+        $result = ItemLists::select(['id', 'item_code', 'item_name', 'item_description', 'item_category'])
+            ->where("item_code", $code)
+            ->first();
+
         $result->item_in = ItemLists::where('item_lists.id', $result->id)
             ->join('item_ins', 'item_lists.id', 'item_id')
             ->select('item_in_quantity', 'item_in_date')
             ->get();
+
         $result->item_out = ItemLists::where('item_lists.id', $result->id)
             ->join('item_outs', 'item_lists.id', 'item_id')
             ->select('item_out_quantity', 'item_out_date')
             ->get();
+        
+        /** @var RemovingUniqID */
+        unset($result['id']);
 
-        return response(["session" => session()->all(), "result" => $result], 200, ['content-type' => 'application/json']);
+        // return response(["session" => session()->all(), "result" => $result], 200, ['content-type' => 'application/json']);
+        return view('items', ["session" => session()->all(), "result" => $result]);
     }
 }
