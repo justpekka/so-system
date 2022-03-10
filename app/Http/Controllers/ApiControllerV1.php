@@ -46,7 +46,7 @@ class ApiControllerV1 extends Controller
     public function login(Request $request)
     {
         // Handling the Default (GET) Method
-        if( $request->getMethod() == "GET" ) return view('user.login');
+        if( $request->getMethod() == "GET" ) return view('login');
 
         // Handling the Default (POST) Method
         $username = $request->get('username');

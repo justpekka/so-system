@@ -35,15 +35,18 @@ Route::controller(ItemListsController::class)
   ->middleware(['user.handle'])
   ->name('dashboard.')
   ->group(function() {
-  Route::get('/', 'index')->name('index');
-  Route::get('/{code}', 'detail')->name('detail');
+    Route::get('/', 'index')->name('index');
+    Route::get('/{code}', 'detail')->name('detail');
 });
 
-Route::group(['prefix' => '/board', 'controller' => AboardController::class], function() {
-  Route::get('/', 'index');
+Route::controller(AboardController::class)
+  ->prefix('/board')
+  ->middleware(['user.handle'])
+  ->name('board.')
+  ->group(function() {
+    Route::get('/', 'index');
 });
 
-// Route::get('/user', UserController::class);
 
 Route::prefix("/v1")->controller(ApiControllerV1::class)->group(function() {
   Route::get('/', 'index')->name('ApiV1');
