@@ -21,7 +21,9 @@ class ItemListsController extends Controller
 
     public function index(Request $request)
     {
-        $result = json_decode(ItemLists::get());
+        $result = json_decode(
+            ItemLists::select(['id', 'item_code', 'item_name', 'item_description', 'item_category'])->get()
+        );
 
         foreach($result as $key => $value)
         {
@@ -65,7 +67,6 @@ class ItemListsController extends Controller
         /** @var RemovingUniqID */
         unset($result['id']);
 
-        // return response(["session" => session()->all(), "result" => $result], 200, ['content-type' => 'application/json']);
         return view('items', ["session" => session()->all(), "result" => $result]);
     }
 }

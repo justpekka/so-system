@@ -59,3 +59,8 @@ Route::prefix("/v1")->controller(ApiControllerV1::class)->group(function() {
   });
   /** End of @var V1Auth RouteController */
 });
+
+
+route::get('/', function() {
+  return json_encode(["copper", "sock", "denji"]);
+});
