@@ -27,5 +27,6 @@ class ViewServiceProvider extends ServiceProvider
     {
         Blade::componentNamespace('App\\View\\Components\\User', 'user');
         Blade::componentNamespace('App\\View\\Components\\Item', 'item');
+        Blade::componentNamespace('App\\View\\Components\\Global', 'global');
     }
 }
