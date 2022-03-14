@@ -29,7 +29,6 @@ Route::get('/login', [ApiControllerV1::class, 'login'])->name('user_login')->mid
 Route::get('/logout', [ApiControllerV1::class, 'logout'])->name('user_logout');
 
 
-/** @var Items RouteController */
 Route::controller(ItemListsController::class)
   ->prefix('/item')
   ->middleware(['user.handle'])
@@ -48,14 +47,14 @@ Route::controller(AboardController::class)
 });
 
 
-Route::prefix("/v1")->controller(ApiControllerV1::class)->group(function() {
-  Route::get('/', 'index')->name('ApiV1');
+Route::prefix("/v1")
+  ->controller(ApiControllerV1::class)
+  ->group(function() {
+    Route::get('/', 'index')->name('ApiV1');
 
-  /** @var V1Auth RouteController */
-  Route::group(['prefix' => '/auth'], function() {
-    Route::post('/register', 'registerUser');
-    Route::post('/login', 'login');
-    Route::post('/logout', 'logout');
-  });
-  /** End of @var V1Auth RouteController */
+    Route::group(['prefix' => '/auth'], function() {
+      Route::post('/register', 'registerUser');
+      Route::post('/login', 'login');
+      Route::post('/logout', 'logout');
+    });
 });

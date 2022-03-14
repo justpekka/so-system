@@ -16,9 +16,10 @@
     @section('navbar')
       <x-global::navbar />
     @show
-    
-    @yield('sidebar')
 
+    @section('sidebar')
+    @show
+  
     <div class="container">
       @yield('content')
     </div>
