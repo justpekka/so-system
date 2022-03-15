@@ -5,7 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery\Undefined;
 
-use App\Http\Controllers\ApiControllerV1;
+use App\Http\Controllers\Api\V1\Auth as ApiAuth;
+use App\Http\Controllers\Api\V1\Items as ApiItem;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemListsController;
@@ -25,36 +26,29 @@ use App\Http\Controllers\AboardController;
 
 Route::view('/welcome', 'archive.welcome')->name('welcome');
 
-Route::get('/login', [ApiControllerV1::class, 'login'])->name('user_login')->middleware('user.handle');
-Route::get('/logout', [ApiControllerV1::class, 'logout'])->name('user_logout');
+Route::get('/login', [ApiAuth::class, 'login'])->name('user_login')->middleware('user.handle');
+Route::get('/logout', [ApiAuth::class, 'logout'])->name('user_logout');
 
 
-Route::controller(ItemListsController::class)
-  ->prefix('/item')
-  ->middleware(['user.handle'])
-  ->name('dashboard.')
-  ->group(function() {
+Route::controller(ItemListsController::class)->prefix('/item')->middleware(['user.handle'])->name('dashboard.')
+ ->group(function() {
     Route::get('/', 'index')->name('index');
     Route::get('/{code}', 'detail')->name('detail');
 });
 
-Route::controller(AboardController::class)
-  ->prefix('/board')
-  ->middleware(['user.handle'])
-  ->name('board.')
-  ->group(function() {
+Route::controller(AboardController::class)->prefix('/board')->middleware(['user.handle'])->name('board.')
+ ->group(function() {
     Route::get('/', 'index');
 });
 
 
-Route::prefix("/v1")
-  ->controller(ApiControllerV1::class)
-  ->group(function() {
-    Route::get('/', 'index')->name('ApiV1');
+Route::prefix("/v1")->name('v1.')->group(function() {
+  Route::resource('/auth', ApiAuth::class)->except(['index', 'create', 'edit']);
+  Route::prefix('/auth')->controller(ApiAuth::class)->name('auth.')->group(function() {
+    Route::post('/register', 'register')->name('register');
+    Route::post('/login', 'login')->name('login');
+    Route::post('/logout', 'logout')->name('logout');
+  });
 
-    Route::group(['prefix' => '/auth'], function() {
-      Route::post('/register', 'registerUser');
-      Route::post('/login', 'login');
-      Route::post('/logout', 'logout');
-    });
+  route::resource('/items', ApiItem::class)->except(['create', 'edit']);
 });

@@ -1,4 +1,4 @@
-<form action="/v1/auth/login" method="POST">
+<form action="v1/auth/login" method="POST">
   @csrf
   <div class="mb-3">
     <label for="username" class="form-label">Username</label>

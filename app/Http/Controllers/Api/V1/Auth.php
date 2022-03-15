@@ -1,37 +1,43 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Exists;
 
+use App\Http\Controllers\Controller;
+
 use App\Models\User;
 use App\Models\LoginToken;
 
-class ApiControllerV1 extends Controller
+class Auth extends Controller
 {
-    /**
-     * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    
-    public function __invoke(Request $request)
+    public function index()
     {
-        return $this->index($request);
+        
     }
     
-    public function index(Request $request)
+    public function store(Request $request)
     {
-        echo "<pre>";
-        print_r($request->all());
-        echo 'Hello, World! This is my API V1 progress. Stay updated, Okay?';
-        return; 
+
     }
     
-    /** @var V1Auth RouteController */
-    public function registerUser(Request $request)
+    public function show($id)
+    {
+
+    }
+    
+    public function update(Request $request)
+    {
+
+    }
+    
+    public function destroy($id){
+
+    }
+
+    
+    public function register(Request $request)
     {
         $validated = $request->validateWithBag('POST', [
             'username' => ['bail', 'required', 'unique:users', 'min:5', 'max:12'],
@@ -93,5 +99,4 @@ class ApiControllerV1 extends Controller
         return response(["message" => "unauthorized user."], 401);
         // return response(["message" => [$token], "result" => json_decode($status)]);
     }
-    /** End of @var V1Auth RouteController */
 }
