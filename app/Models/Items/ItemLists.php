@@ -9,7 +9,7 @@ class ItemLists extends Model
 {
     use HasFactory;
 
-    protected $id = 'item_id';
+    protected $id = 'id';
 
     public function getItems()
     {

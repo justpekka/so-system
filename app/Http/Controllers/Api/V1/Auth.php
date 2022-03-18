@@ -37,17 +37,17 @@ class Auth extends Controller
     }
 
     
-    public function register(Request $request)
-    {
-        $validated = $request->validateWithBag('POST', [
-            'username' => ['bail', 'required', 'unique:users', 'min:5', 'max:12'],
-            'password' => ['required', 'min:5'],
-            'first_name' => ['required', 'min:2', 'max:20'],
-            'last_name' => ['min:2', 'max:20'],
-        ]);
+    // public function register(Request $request)
+    // {
+    //     $validated = $request->validateWithBag('POST', [
+    //         'username' => ['bail', 'required', 'unique:users', 'min:5', 'max:12'],
+    //         'password' => ['required', 'min:5'],
+    //         'first_name' => ['required', 'min:2', 'max:20'],
+    //         'last_name' => ['min:2', 'max:20'],
+    //     ]);
 
-        return $validated;
-    }
+    //     return $validated;
+    // }
 
     public function login(Request $request)
     {
@@ -82,7 +82,7 @@ class Auth extends Controller
         ]);
 
         session(['access_token' => $rand_token]);
-        return response(['token' => $rand_token, 'role'], 200, ['content-type' => 'application/json']);
+        return response()->json(['token' => $rand_token, 'role'], 200);
     }
     
     public function logout(Request $request)
@@ -93,10 +93,9 @@ class Auth extends Controller
 
         if( $status ) {
             session()->forget('access_token');
-            return response(["message" => "Logout success."], 200);
+            return response()->json(["message" => "Logout success."], 200);
         };
         
-        return response(["message" => "unauthorized user."], 401);
-        // return response(["message" => [$token], "result" => json_decode($status)]);
+        return response()->json(["message" => "unauthorized user."], 401);
     }
 }

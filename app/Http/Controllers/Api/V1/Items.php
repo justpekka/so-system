@@ -58,7 +58,23 @@ class Items extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'item_code' => 'required',
+            'item_name' => 'required',
+            'item_description' => 'required',
+            'item_category' => 'required',
+        ]);
+
+        if( !$validate ) return response("error.");
+
+        // $result = ItemLists::insert([
+        // ]);
+
+        $response = [
+            'message' => 'Item created successfully!',
+            'result' => $request->all(),
+        ];
+        return response()->json($response);
     }
 
     /**
