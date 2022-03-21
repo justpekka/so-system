@@ -9,25 +9,9 @@ class ItemLists extends Model
 {
     use HasFactory;
 
-    protected $id = 'id';
+    protected $primaryKey = 'id';
 
-    public function getItems()
-    {
-        $result = json_decode(ItemLists::get());
-
-        foreach($result as $key => $value)
-        {
-            $result[$key]->item_log = [
-                "item_in" => ItemLists::find($value->id)
-                    ->join('item_ins', 'item_lists.id', '=', 'item_id')
-                    ->select('item_in_quantity', 'item_in_date')
-                    ->sum('item_in_quantity'),
-                "item_out" => ItemLists::find($value->id)
-                    ->join('item_outs', 'item_lists.id', '=', 'item_id')
-                    ->select('item_out_quantity', 'item_out_date')
-                    ->sum('item_out_quantity')
-            ];
-        };
-    }
-    
+    protected $fillable = ['item_code', 'item_name', 'item_description', 'item_category'];
+    public $timestamps = true;
+    protected $dateFormat = 'U';
 }

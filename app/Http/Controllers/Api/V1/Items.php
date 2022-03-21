@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use App\Models\Items\ItemLists;
 use App\Models\Items\ItemIns;
 use App\Models\Items\ItemOuts;
-use Symfony\Component\HttpFoundation\Response;
+
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreItemRequest;
+use Illuminate\Database\QueryException;
 
 class Items extends Controller
 {
@@ -19,9 +23,7 @@ class Items extends Controller
      */
     public function index()
     {
-        $result = json_decode(
-            ItemLists::select(['id', 'item_code', 'item_name', 'item_description', 'item_category'])->get()
-        );
+        $result = ItemLists::get();
 
         foreach($result as $key => $value)
         {
@@ -48,33 +50,6 @@ class Items extends Controller
             'result' => $result
         ];
         return response()->json($response, Response::HTTP_OK);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $validate = $request->validate([
-            'item_code' => 'required',
-            'item_name' => 'required',
-            'item_description' => 'required',
-            'item_category' => 'required',
-        ]);
-
-        if( !$validate ) return response("error.");
-
-        // $result = ItemLists::insert([
-        // ]);
-
-        $response = [
-            'message' => 'Item created successfully!',
-            'result' => $request->all(),
-        ];
-        return response()->json($response);
     }
 
     /**
@@ -109,6 +84,40 @@ class Items extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'item_code' => ['required', 'unique:item_lists', 'max:100'],
+            'item_name' => ['required'],
+            'item_description' => ['nullable'],
+            'item_category' => ['nullable'],
+        ]);
+
+        if( $validator->fails() ) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            $item = ItemLists::insert($validator->validated());
+            
+            $response = [
+                'message' => 'Item created successfully!',
+                'result' => $item,
+            ];
+            return response()->json($response, Response::HTTP_CREATED);
+         } catch(QueryException $e) {
+            return response()->json([
+                'message' => 'There are some error(s)! ' . $e->errorInfo,
+            ]);
+         }
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -117,7 +126,32 @@ class Items extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $item = ItemLists::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'item_code' => ['required', 'unique:item_lists', 'max:100'],
+            'item_name' => ['required'],
+            'item_description' => ['nullable'],
+            'item_category' => ['nullable'],
+        ]);
+
+        if( $validator->fails() ) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            $item->update($validator->validated());
+            
+            $response = [
+                'message' => 'Item updated successfully!',
+                'result' =>  $item,
+            ];
+            return response()->json($response, Response::HTTP_CREATED);
+         } catch(QueryException $e) {
+            return response()->json([
+                'message' => 'There are some error(s)! ' . $e->errorInfo,
+            ]);
+         }
     }
 
     /**
@@ -128,6 +162,20 @@ class Items extends Controller
      */
     public function destroy($id)
     {
-        //
+        $item = ItemLists::findOrFail($id);
+
+        try {
+            $item->delete();
+            
+            $response = [
+                'message' => 'Item deleted successfully!',
+            ];
+            return response()->json($response, Response::HTTP_CREATED);
+            
+         } catch(QueryException $e) {
+            return response()->json([
+                'message' => 'There are some error(s)! ' . $e->errorInfo,
+            ]);
+         }
     }
 }

@@ -44,6 +44,7 @@ Route::controller(AboardController::class)->prefix('/board')->middleware(['user.
 
 Route::prefix("/v1")->name('v1.')->group(function() {
   Route::resource('/auth', ApiAuth::class)->except(['index', 'create', 'edit']);
+  
   Route::prefix('/auth')->controller(ApiAuth::class)->name('auth.')->group(function() {
     Route::post('/register', 'register')->name('register');
     Route::post('/login', 'login')->name('login');
