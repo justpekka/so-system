@@ -21,7 +21,8 @@ class ItemList extends Migration
             $table->string('item_name', 255);
             $table->text('item_description')->nullable(true);
             $table->json('item_category')->nullable(true);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
         });
         }

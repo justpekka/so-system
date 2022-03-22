@@ -13,13 +13,16 @@ class CreateLoginTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('login_tokens', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id');
-            $table->string('token', 255);
-            $table->timestamp('last_used_at')->nullable();
-            $table->timestamps();
-        });
+        if( Schema::hasTable('login_tokens') )
+        {
+            Schema::create('login_tokens', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained('users', 'id');
+                $table->string('token', 255);
+                $table->timestamp('last_used_at')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -29,6 +32,6 @@ class CreateLoginTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('login_tokens');
+        // Schema::dropIfExists('login_tokens');
     }
 }
