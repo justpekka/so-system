@@ -37,17 +37,17 @@ class Auth extends Controller
     }
 
     
-    // public function register(Request $request)
-    // {
-    //     $validated = $request->validateWithBag('POST', [
-    //         'username' => ['bail', 'required', 'unique:users', 'min:5', 'max:12'],
-    //         'password' => ['required', 'min:5'],
-    //         'first_name' => ['required', 'min:2', 'max:20'],
-    //         'last_name' => ['min:2', 'max:20'],
-    //     ]);
+    public function register(Request $request)
+    {
+        $validated = $request->validateWithBag('POST', [
+            'username' => ['bail', 'required', 'unique:users', 'min:5', 'max:12'],
+            'password' => ['required', 'min:5'],
+            'first_name' => ['required', 'min:2', 'max:20'],
+            'last_name' => ['min:2', 'max:20'],
+        ]);
 
-    //     return $validated;
-    // }
+        return $validated;
+    }
 
     public function login(Request $request)
     {
