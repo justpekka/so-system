@@ -43,7 +43,7 @@ Route::controller(AboardController::class)->prefix('/board')->middleware(['user.
 
 
 Route::prefix("/v1")->name('v1.')->group(function() {
-  Route::resource('/auth', ApiAuth::class)->except(['index', 'create', 'edit']);
+  Route::apiResource('/auth', ApiAuth::class)->except(['index']);
   
   Route::prefix('/auth')->controller(ApiAuth::class)->name('auth.')->group(function() {
     Route::post('/register', 'register')->name('register');
@@ -51,5 +51,7 @@ Route::prefix("/v1")->name('v1.')->group(function() {
     Route::post('/logout', 'logout')->name('logout');
   });
 
-  route::resource('/items', ApiItem::class)->except(['create', 'edit']);
+  route::apiResource('/items', ApiItem::class);
+  route::post('/items/stock-in/{item?}', [ApiItem::class, "stockIn"]);
+  route::post('/items/stock-out/{item}', [ApiItem::class, "stockOut"]);
 });
