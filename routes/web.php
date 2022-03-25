@@ -5,13 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery\Undefined;
 
-use App\Http\Controllers\Api\V1\Auth as ApiAuth;
-use App\Http\Controllers\Api\V1\Items as ApiItem;
+use App\Http\Controllers\Api\V1\AuthController as ApiAuth;
+use App\Http\Controllers\Api\V1\ItemController as ApiItem;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ItemListsController;
-
-use App\Http\Controllers\AboardController;
+use App\Http\Controllers\ItemListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,15 +28,11 @@ Route::get('/login', [ApiAuth::class, 'login'])->name('user_login')->middleware(
 Route::get('/logout', [ApiAuth::class, 'logout'])->name('user_logout');
 
 
-Route::controller(ItemListsController::class)->prefix('/item')->middleware(['user.handle'])->name('dashboard.')
+Route::prefix('/item')
+//  ->middleware(['user.handle'])
+ ->name('dashboard.')
  ->group(function() {
-    Route::get('/', 'index')->name('index');
-    Route::get('/{code}', 'detail')->name('detail');
-});
-
-Route::controller(AboardController::class)->prefix('/board')->middleware(['user.handle'])->name('board.')
- ->group(function() {
-    Route::get('/', 'index');
+  Route::resource('/', ItemListController::class);
 });
 
 
@@ -52,6 +46,6 @@ Route::prefix("/v1")->name('v1.')->group(function() {
   });
 
   route::apiResource('/items', ApiItem::class);
-  route::post('/items/stock-in/{item?}', [ApiItem::class, "stockIn"]);
-  route::post('/items/stock-out/{item}', [ApiItem::class, "stockOut"]);
+  route::post('/items/stock-in/{item}', [ApiItem::class, "stockIn"])->name("items.stockIn");
+  route::post('/items/stock-out/{item}', [ApiItem::class, "stockOut"])->name("items.stockOut");
 });

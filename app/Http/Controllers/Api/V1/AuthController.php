@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\LoginToken;
 
-class Auth extends Controller
+class AuthController extends Controller
 {
     public function index()
     {

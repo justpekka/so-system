@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreItemRequest;
 use Illuminate\Database\QueryException;
 
-class Items extends Controller
+class ItemController extends Controller
 {
     /**
      * Display a listing of the resource.
