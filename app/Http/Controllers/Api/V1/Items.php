@@ -110,7 +110,8 @@ class Items extends Controller
         $item = ItemList::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'item_code' => ['required', 'unique:item_lists', 'max:100'],
+            // 'item_code' => ['required', 'unique:item_lists', 'max:100'],
+            'item_code' => ['required', 'max:100'],
             'item_name' => ['required'],
             'item_description' => ['nullable'],
             'item_category' => ['nullable'],
@@ -166,27 +167,18 @@ class Items extends Controller
    public function stockIn(Request $request, $item = null)
    {
         $validator = Validator::make($request->all(), [
-            'item_in_quantity' => ['required', 'integer']
+            'item_out_quantity' => ['required', 'integer']
         ]);
         if( $validator->fails() ) return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $validated = $validator->validated();
-        if( $item ) $validated["item_id"] = ItemList::where("item_code", $item)->firstOrFail()['id'];
-
-        if( !$item ) {
-            $request = $this->store($request);
-            if( $request->original != null ) {
-                return response()->json( $request->original, Response::HTTP_PRECONDITION_FAILED );
-            }
-
-            $validated["item_id"] = $request->result->id;
-        }
+        $validated["item_id"] = ItemList::where("item_code", $item)->firstOrFail()['id'];
 
         try {
             $item = ItemIn::create($validated);
             
             $response = [
-                'message' => 'Stock Item inserted!',
+                'message' => 'Stock Item taken!',
                 'result' => $item,
             ];
             return response()->json($response, Response::HTTP_CREATED);
